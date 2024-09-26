@@ -1,17 +1,20 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 class WorldTime {
   String location; // location name for the UI
   String? time; // time in that location
   String flag; // url to an asset flag icon
   String url;
+  bool? isDaytime;
 
   WorldTime(
       {required this.location,
       this.time,
       required this.flag,
-      required this.url});
+      required this.url,
+      this.isDaytime});
 
   Future<void> getTime() async {
     try {
@@ -28,10 +31,11 @@ class WorldTime {
 
       DateTime now = DateTime.parse(datetime);
       now = now.add(Duration(hours: int.parse(offset)));
-      print(now);
+      // print(now);
 
       //set time property
-      time = now.toString();
+      time = DateFormat.jm().format(now);
+      isDaytime = now.hour > 6 && now.hour < 20 ? true : false;
     } catch (e) {
       print('error message : $e');
     }
